@@ -1,0 +1,20 @@
+# Generated artifacts
+*.pdf
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Kubernetes / secrets — never commit credentials, kubeconfigs, or API keys
+*.env
+.env
+secrets.*
+*_credentials.json
+api_credentials.json
+kubeconfig
+*.kubeconfig
+*-token.txt
+sa-token.*

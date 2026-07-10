@@ -1,0 +1,83 @@
+# ===========================================================================
+# REPRESENTATIVE Cisco Secure Workload node-agent DaemonSet  (FOR LEARNING)
+# ===========================================================================
+# ⚠  DO NOT deploy this as-is in production.
+#
+# The real, working DaemonSet is GENERATED PER-TENANT by Cisco Secure Workload
+# (Manage → Agents → Installer → Kubernetes/OpenShift, or the connector's
+# Kubernetes tab). That generated bundle contains the correct container image,
+# your tenant activation key, cluster CA, and control-plane FQDNs.
+#
+# This file exists only to show WHY the agent needs host networking and
+# elevated capabilities: it captures flows on node + pod interfaces and
+# programs iptables in the node and pod network namespaces to enforce policy.
+#
+# Secrets: the activation key belongs in a Secret injected at deploy time —
+# never hardcode it here or commit it. See ../.gitignore.
+# ===========================================================================
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: csw-agent
+  namespace: tetration
+  labels:
+    app: csw-agent
+    app.kubernetes.io/part-of: cisco-secure-workload
+spec:
+  selector:
+    matchLabels:
+      app: csw-agent
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: csw-agent
+    spec:
+      serviceAccountName: csw-agent
+      # Run one agent on EVERY node, including tainted/control-plane nodes.
+      tolerations:
+        - operator: Exists
+      # Required to see node interfaces and program node-namespace iptables.
+      hostNetwork: true
+      hostPID: true
+      dnsPolicy: ClusterFirstWithHostNet
+      priorityClassName: system-node-critical
+      containers:
+        - name: csw-agent
+          # Replace with the image from your CSW-generated installer bundle.
+          image: REGISTRY/tetration/tet-sensor:REPLACE_WITH_TENANT_VERSION
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: true          # required to write iptables in pod + node netns
+            capabilities:
+              add: ["NET_ADMIN", "NET_RAW", "SYS_ADMIN", "SYS_PTRACE"]
+          env:
+            - name: ACTIVATION_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: csw-agent-activation   # created out-of-band, not committed
+                  key: activation-key
+            - name: PRESERVE_EXISTING_RULES
+              value: "true"           # MANDATORY for k8s: coexist with CNI iptables
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          volumeMounts:
+            - { name: hostroot,   mountPath: /host,          readOnly: false }
+            - { name: procfs,     mountPath: /host/proc,     readOnly: true  }
+            - { name: runsock,    mountPath: /host/var/run,  readOnly: false }
+      volumes:
+        - { name: hostroot, hostPath: { path: / } }
+        - { name: procfs,   hostPath: { path: /proc } }
+        - { name: runsock,  hostPath: { path: /var/run } }
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: csw-agent
+  namespace: tetration

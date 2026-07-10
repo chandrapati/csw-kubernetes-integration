@@ -1,0 +1,45 @@
+# ---------------------------------------------------------------------------
+# Least-privilege RBAC for the Cisco Secure Workload (CSW) Kubernetes CONNECTOR
+# (inventory discovery only — read/list/watch, no write).
+#
+# The connector uses this ServiceAccount's token + the cluster CA to pull
+# pod / service / namespace / node metadata into CSW as orchestrator_* labels.
+# It does NOT need write access; enforcement is done by the DaemonSet agent,
+# not the connector.
+#
+# Apply:   kubectl apply -f connector-rbac.yaml
+# Token:   kubectl -n tetration create token csw-connector           # k8s >=1.24
+#          (store the token in a secrets manager — never commit it)
+# ---------------------------------------------------------------------------
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tetration
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: csw-connector
+  namespace: tetration
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: csw-connector-readonly
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "services", "endpoints", "namespaces", "nodes"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: csw-connector-readonly
+subjects:
+  - kind: ServiceAccount
+    name: csw-connector
+    namespace: tetration
+roleRef:
+  kind: ClusterRole
+  name: csw-connector-readonly
+  apiGroup: rbac.authorization.k8s.io
