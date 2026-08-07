@@ -152,6 +152,7 @@ Learning paths, reference material, and day-2 tooling:
 | [Compliance Mapping](https://github.com/chandrapati/CSW-Compliance-Mapping) | Map CSW controls to NIST, PCI-DSS, HIPAA, CIS | Compliance & audit |
 | [Tenant Insights](https://github.com/chandrapati/CSW-Tenant-Insights) | Tenant-level reporting and analytics | Visibility metrics |
 | [Operations Toolkit](https://github.com/chandrapati/CSW-Operations-Toolkit) | Day-2 ops scripts: health checks, reporting, policy analysis | Ongoing operations |
+| [Tetragon (eBPF) for Segmentation](https://github.com/chandrapati/tetragon-ebpf-segmentation) | What Tetragon is in the eBPF world and its role in segmentation — and how it fits next to Cilium & Secure Workload | eBPF / runtime enforcement |
 
 > **Suggested customer journey:**
 > User Education → Agent Installation → Kubernetes / OpenShift → Policy Lifecycle → ISE/pxGrid → ServiceNow CMDB → Compliance Mapping → Operations Toolkit
