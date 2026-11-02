@@ -5,7 +5,7 @@
 [![GitHub forks](https://img.shields.io/github/forks/chandrapati/csw-kubernetes-integration?style=social)](https://github.com/chandrapati/csw-kubernetes-integration/network/members)
 [![Last commit](https://img.shields.io/github/last-commit/chandrapati/csw-kubernetes-integration)](https://github.com/chandrapati/csw-kubernetes-integration/commits/main)
 
-A step-by-step, **beginner-friendly** guide to integrating a **Kubernetes or OpenShift cluster** with **Cisco Secure Workload (CSW)** — the **connector** (pod/service label import), the **node-agent DaemonSet** (flow visibility + enforcement), **iptables-based micro-segmentation** for pods & services, and optional **container image CVE scanning**.
+A step-by-step, **beginner-friendly** guide to integrating a **Kubernetes or OpenShift cluster** with **Cisco Secure Workload (CSW)** — the **connector** (pod/service label import), the **node-agent DaemonSet** (flow visibility + enforcement), **iptables-based micro-segmentation** for pods & services, and optional **container image CVE scanning**. How a policy intent becomes node rules and pod rules is in [CSW-Kubernetes-OpenShift-Guide](https://github.com/chandrapati/CSW-Kubernetes-OpenShift-Guide). The OpenShift path, including the privileged SCC, is in [csw-openshift-integration](https://github.com/chandrapati/csw-openshift-integration).
 
 [![Cisco Secure Workload](https://img.shields.io/badge/Cisco-Secure%20Workload-00205B?logo=cisco&logoColor=white)](https://www.cisco.com/go/secureworkload)
 [![Kubernetes](https://img.shields.io/badge/Kubernetes-EKS%20%C2%B7%20AKS%20%C2%B7%20GKE-326CE5?logo=kubernetes&logoColor=white)](https://kubernetes.io/docs/home/)
